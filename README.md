@@ -1,3 +1,3 @@
-# Belajar Maven ##
+# Analisa Regresi Linear #
 
-# Aplikasi untuk belajar Maven #
+## Studi Kasus : Prediksi Cacat Produk ##
