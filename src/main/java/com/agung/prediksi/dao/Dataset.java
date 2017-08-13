@@ -81,6 +81,11 @@ public class Dataset {
         d10.setJumlahCacat(13.0);
         hasil.add(d10);
         
+        Data d11 = new Data();
+        d11.setTanggal(11);
+        d11.setSuhuRuangan(28.0);
+        d11.setJumlahCacat(15.0);
+        hasil.add(d11);
         
         return hasil;
     }

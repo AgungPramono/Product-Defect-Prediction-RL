@@ -8,7 +8,7 @@
 package com.agung.prediksi.test;
 
 import com.agung.prediksi.dao.DataDao;
-import com.agung.prediksi.engine.RMSETest;
+import com.agung.prediksi.engine.NumericEvaluation;
 import com.agung.prediksi.engine.RegresiEngine;
 import com.agung.prediksi.entity.Data;
 import java.text.DecimalFormat;
@@ -26,31 +26,25 @@ public class RegresiEngineTest {
 
     //@Test
     public void testJumlahSuhu() {
-        double jumlahSuhu = regEngine.jumlahSuhu();
+        Double jumlahSuhu = regEngine.getTotalSuhu();
         System.out.println("Jumlah Suhu : " + jumlahSuhu);
     }
 
     //@Test
     public void testJumlahCacat() {
-        double jumlahCacat = regEngine.jumlahCacatProduk();
+        Double jumlahCacat = regEngine.getCacatProduk();
         System.out.println("Jumlah Cacat = " + jumlahCacat);
-    }
-
-    //@Test
-    public void hitungVarXY() {
-        double xy = regEngine.getJumlahVarXY();
-        System.out.println("XY = " + xy);
     }
 
     @Test
     public void testHitungKoefisienRegA() {
-        double regA = regEngine.getKoefisienRegA();
+        Double regA = regEngine.getKoefisienRegA();
         System.out.println("Koefisien Reg A = " + regA);
     }
 
     //@Test
     public void hitung() {
-        double nilai = ((8 * (17416)) - ((413) * (292))) / ((8 * (25189))
+        Double nilai = ((8 * (17416)) - ((413) * (292))) / ((8 * (25189))
                 - (Math.pow(413, 2)));
 
         System.out.println("Nilai = " + nilai);
@@ -59,15 +53,15 @@ public class RegresiEngineTest {
 
     @Test
     public void testHitungKoefisienRegB() {
-        double regB = regEngine.getKoefisienRegB();
+        Double regB = regEngine.getKoefisienRegB();
         System.out.println("Koefisien Reg B = " + regB);
     }
 
     @Test
     public void testPrediksiJumlahCacatProduk() {
-        double suhu = 20;
+        Double suhu = 25.0;
 
-        double jumlahCacat = regEngine.getKoefisienRegA()
+        Double jumlahCacat = regEngine.getKoefisienRegA()
                 + regEngine.getKoefisienRegB() * suhu;
 
         System.out.println("");
@@ -87,7 +81,7 @@ public class RegresiEngineTest {
         List<Data> dataAktual = dtDao.getAllData();
 
         for (int i = 0; i < dataAktual.size(); i++) {
-            double jmlCacat = regEngine.getKoefisienRegA() + regEngine.getKoefisienRegB()
+            Double jmlCacat = regEngine.getKoefisienRegA() + regEngine.getKoefisienRegB()
                     * dataAktual.get(i).getSuhuRuangan();
 
             System.out.println("");
@@ -97,8 +91,10 @@ public class RegresiEngineTest {
             dataPrediksi.add(jmlCacat);
         }
 
-        //test tingkat error dengan RMSE
-        double rmse = RMSETest.calcRMSE(dataAktual, dataPrediksi);
-        System.out.println("Dengan Nilai RMSE sebesar = " + format.format(rmse / 100) + " %");
+        //test tingkat error dengan RMSE dan MSE
+        Double rmse = NumericEvaluation.calcRMSE(dataAktual, dataPrediksi);
+        Double mse = NumericEvaluation.calcMSE(dataAktual, dataPrediksi);
+        System.out.println("Dengan Nilai RMSE = " + format.format(rmse / 100) + " %");
+        System.out.println("Dengan Nilai MSE  = " + format.format(mse / 100) + " %");
     }
 }

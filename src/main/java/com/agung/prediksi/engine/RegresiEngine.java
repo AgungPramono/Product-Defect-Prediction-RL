@@ -25,16 +25,16 @@ public class RegresiEngine {
         data = dataDao.getAllData();
     }
 
-    public double jumlahSuhu() {
-        double jumlah = 0.0;
+    public Double getTotalSuhu() {
+        Double jumlah = 0.0;
         for (int i = 0; i < data.size(); i++) {
             jumlah += data.get(i).getSuhuRuangan();
         }
         return jumlah;
     }
 
-    public double jumlahCacatProduk() {
-        double jumlah = 0.0;
+    public Double getCacatProduk() {
+        Double jumlah = 0.0;
         for (int i = 0; i < data.size(); i++) {
             jumlah += data.get(i).getJumlahCacat();
         }
@@ -42,18 +42,18 @@ public class RegresiEngine {
     }
     List<Double> variabelX;
 
-    private void getX() {
+    private void hitungX() {
         variabelX = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             Data dx = dataDao.getDataById(i);
-            double x = Math.pow(dx.getSuhuRuangan(), 2);
+            Double x = Math.pow(dx.getSuhuRuangan(), 2);
             variabelX.add(x);
         }
     }
 
-    public double getJumlahVarX() {
-        getX();
-        double jumlahVarX = 0.0;
+    private Double getJumlahVarX() {
+        hitungX();
+        Double jumlahVarX = 0.0;
         for (int i = 0; i < data.size(); i++) {
             jumlahVarX += variabelX.get(i);
         }
@@ -62,18 +62,18 @@ public class RegresiEngine {
 
     private List<Double> variabelY;
 
-    private void getY() {
+    private void hitungY() {
         variabelY = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             Data dx = dataDao.getDataById(i);
-            double x = Math.pow(dx.getJumlahCacat(), 2);
+            Double x = Math.pow(dx.getJumlahCacat(), 2);
             variabelY.add(x);
         }
     }
 
-    public double getJumlahVarY() {
-        getY();
-        double jumlahVarY = 0.0;
+    private Double getJumlahVarY() {
+        hitungY();
+        Double jumlahVarY = 0.0;
         for (int i = 0; i < data.size(); i++) {
             jumlahVarY += variabelY.get(i);
         }
@@ -82,34 +82,33 @@ public class RegresiEngine {
 
     private List<Double> variabelXY;
 
-    public List<Double> getXY() {
+    private void hitungXY() {
         variabelXY = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-            double jumlahXY = data.get(i).getSuhuRuangan() * data.get(i).getJumlahCacat();
+            Double jumlahXY = data.get(i).getSuhuRuangan() * data.get(i).getJumlahCacat();
             variabelXY.add(jumlahXY);
         }
-        return variabelXY;
     }
 
-    public double getJumlahVarXY() {
-        getXY();
-        double jumlahVarXY = 0.0;
+    private Double getJumlahVarXY() {
+        hitungXY();
+        Double jumlahVarXY = 0.0;
         for (int i = 0; i < data.size(); i++) {
             jumlahVarXY += variabelXY.get(i);
         }
         return jumlahVarXY;
     }
 
-    public double getKoefisienRegA() {
-        double a = (((jumlahCacatProduk()) * (getJumlahVarX())) 
-                - ((jumlahSuhu()) * (getJumlahVarXY())))
-                / ((data.size() * (getJumlahVarX())) - (Math.pow(jumlahSuhu(), 2)));
+    public Double getKoefisienRegA() {
+        Double a = (((getCacatProduk()) * (getJumlahVarX())) 
+                - ((getTotalSuhu()) * (getJumlahVarXY())))
+                / ((data.size() * (getJumlahVarX())) - (Math.pow(getTotalSuhu(), 2)));
         return a;
     }
     
-    public double getKoefisienRegB(){
-        double b = ((data.size() * (getJumlahVarXY())) - ((jumlahSuhu()) * (jumlahCacatProduk()))) 
-                / ((data.size() * (getJumlahVarX())) - (Math.pow(jumlahSuhu(), 2)));
+    public Double getKoefisienRegB(){
+        Double b = ((data.size() * (getJumlahVarXY())) - ((getTotalSuhu()) * (getCacatProduk()))) 
+                / ((data.size() * (getJumlahVarX())) - (Math.pow(getTotalSuhu(), 2)));
         return b;
     }
 }
