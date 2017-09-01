@@ -18,97 +18,96 @@ import java.util.List;
  */
 public class RegresiEngine {
 
-    private List<Data> data = new ArrayList<>();
-    private final DataDao dataDao = new DataDao();
+    private List<Data> listData = new ArrayList<>();
+    private DataDao dataDao;
 
-    public RegresiEngine() {
-        data = dataDao.getAllData();
+    public RegresiEngine(List<Data> listDatas) {
+      this.listData = listDatas;
     }
 
     public Double getTotalSuhu() {
         Double jumlah = 0.0;
-        for (int i = 0; i < data.size(); i++) {
-            jumlah += data.get(i).getSuhuRuangan();
+        for (int i = 0; i < listData.size(); i++) {
+            jumlah += listData.get(i).getSuhuRuangan();
         }
         return jumlah;
     }
 
-    public Double getCacatProduk() {
+    public Double getTotalCacatProduk() {
         Double jumlah = 0.0;
-        for (int i = 0; i < data.size(); i++) {
-            jumlah += data.get(i).getJumlahCacat();
+        for (int i = 0; i < listData.size(); i++) {
+            jumlah += listData.get(i).getJumlahCacat();
         }
         return jumlah;
     }
-    List<Double> variabelX;
 
-    private void hitungX() {
-        variabelX = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            Data dx = dataDao.getDataById(i);
+    private List<Double> listDataX = new ArrayList<>();
+
+    private void countX() {
+        for (int i = 0; i < listData.size(); i++) {
+            Data dx = listData.get(i);
             Double x = Math.pow(dx.getSuhuRuangan(), 2);
-            variabelX.add(x);
+            listDataX.add(x);
         }
     }
 
-    private Double getJumlahVarX() {
-        hitungX();
+    private Double getTotalX() {
+        countX();
         Double jumlahVarX = 0.0;
-        for (int i = 0; i < data.size(); i++) {
-            jumlahVarX += variabelX.get(i);
+        for (int i = 0; i < listData.size(); i++) {
+            jumlahVarX += listDataX.get(i);
         }
         return jumlahVarX;
     }
 
-    private List<Double> variabelY;
+    private List<Double> listDataY = new ArrayList<>();
 
-    private void hitungY() {
-        variabelY = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            Data dx = dataDao.getDataById(i);
+    private void countY() {
+        for (int i = 0; i < listData.size(); i++) {
+            Data dx = listData.get(i);
             Double x = Math.pow(dx.getJumlahCacat(), 2);
-            variabelY.add(x);
+            listDataY.add(x);
         }
     }
 
-    private Double getJumlahVarY() {
-        hitungY();
+    private Double getTotalY() {
+        countY();
         Double jumlahVarY = 0.0;
-        for (int i = 0; i < data.size(); i++) {
-            jumlahVarY += variabelY.get(i);
+        for (int i = 0; i < listData.size(); i++) {
+            jumlahVarY += listDataY.get(i);
         }
         return jumlahVarY;
     }
 
-    private List<Double> variabelXY;
+    private List<Double> listDataXY = new ArrayList<>();
 
-    private void hitungXY() {
-        variabelXY = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            Double jumlahXY = data.get(i).getSuhuRuangan() * data.get(i).getJumlahCacat();
-            variabelXY.add(jumlahXY);
+    private void countXY() {
+        for (int i = 0; i < listData.size(); i++) {
+            Double jumlahXY = listData.get(i).getSuhuRuangan() * listData.get(i).getJumlahCacat();
+            listDataXY.add(jumlahXY);
         }
     }
 
-    private Double getJumlahVarXY() {
-        hitungXY();
+    private Double getTotalXY() {
+        countXY();
         Double jumlahVarXY = 0.0;
-        for (int i = 0; i < data.size(); i++) {
-            jumlahVarXY += variabelXY.get(i);
+        for (int i = 0; i < listData.size(); i++) {
+            jumlahVarXY += listDataXY.get(i);
         }
         return jumlahVarXY;
     }
 
     public Double getKoefisienRegA() {
-        Double a = (((getCacatProduk()) * (getJumlahVarX())) 
-                - ((getTotalSuhu()) * (getJumlahVarXY())))
-                / ((data.size() * (getJumlahVarX())) - (Math.pow(getTotalSuhu(), 2)));
+        Double a = (double) (((getTotalCacatProduk()) * (getTotalX()))
+                - ((getTotalSuhu()) * (getTotalXY())))
+                / ((listData.size() * (getTotalX())) - (Math.pow(getTotalSuhu(), 2)));
         return a;
     }
-    
-    public Double getKoefisienRegB(){
-        Double b = ((data.size() * (getJumlahVarXY())) - ((getTotalSuhu()) * (getCacatProduk()))) 
-                / ((data.size() * (getJumlahVarX())) - (Math.pow(getTotalSuhu(), 2)));
+
+    public Double getKoefisienRegB() {
+        Double b = (double) ((listData.size() * (getTotalXY()))
+                - ((getTotalSuhu()) * (getTotalCacatProduk())))
+                / ((listData.size() * (getTotalX())) - (Math.pow(getTotalSuhu(), 2)));
         return b;
     }
 }

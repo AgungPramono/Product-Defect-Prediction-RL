@@ -28,7 +28,7 @@ public class NumericEvaluation {
         for (int i = 0; i < n; i++) {
             rmse += Math.pow(dataPrediksi.get(i) - dataAktual.get(i).getJumlahCacat(), 2);
         }
-        return Math.sqrt(rmse / n);
+        return (double) Math.sqrt(rmse / n);
     }
 
     public static double calcMSE(List<Data> dataAktual, List<Double> dataPrediksi) {
@@ -43,6 +43,6 @@ public class NumericEvaluation {
             mse += Math.pow(dataPrediksi.get(i) - dataAktual.get(i).getJumlahCacat(), 2);
         }
 
-        return mse / n;
+        return (double) mse / n;
     }
 }

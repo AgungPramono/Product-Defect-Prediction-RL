@@ -19,16 +19,20 @@ import java.util.List;
 public class DataDao {
     private List<Data> data = new ArrayList<>();
     
-    public DataDao(){
-        data = Dataset.loadData();
+    public void setDataset(List<Data> listData){
+        this.data  = listData;
+    }
+    
+    public void setData(List<Data> data){
+        this.data = data;
     }
     
     public List<Data> getAllData(){
-       return data;
+       return this.data;
     }
     
     public Data getDataById(int index){
-        return data.get(index);
+        return this.data.get(index);
     }
 
 }

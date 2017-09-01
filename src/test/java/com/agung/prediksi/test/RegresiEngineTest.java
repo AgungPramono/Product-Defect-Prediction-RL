@@ -7,23 +7,28 @@
  */
 package com.agung.prediksi.test;
 
-import com.agung.prediksi.dao.DataDao;
 import com.agung.prediksi.engine.NumericEvaluation;
 import com.agung.prediksi.engine.RegresiEngine;
 import com.agung.prediksi.entity.Data;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  *
  * @author agung
  */
-public class RegresiEngineTest {
+public class RegresiEngineTest extends BaseTest{
 
-    private final RegresiEngine regEngine = new RegresiEngine();
+    private RegresiEngine regEngine;
 
+    @Before
+    public void initialize(){
+        List<Data> listData = getDao().getAllData();
+        regEngine = new RegresiEngine(listData);
+    }
     //@Test
     public void testJumlahSuhu() {
         Double jumlahSuhu = regEngine.getTotalSuhu();
@@ -32,7 +37,7 @@ public class RegresiEngineTest {
 
     //@Test
     public void testJumlahCacat() {
-        Double jumlahCacat = regEngine.getCacatProduk();
+        Double jumlahCacat = regEngine.getTotalCacatProduk();
         System.out.println("Jumlah Cacat = " + jumlahCacat);
     }
 
@@ -59,7 +64,7 @@ public class RegresiEngineTest {
 
     @Test
     public void testPrediksiJumlahCacatProduk() {
-        Double suhu = 25.0;
+        Double suhu = 80.0;
 
         Double jumlahCacat = regEngine.getKoefisienRegA()
                 + regEngine.getKoefisienRegB() * suhu;
@@ -72,13 +77,11 @@ public class RegresiEngineTest {
 
     @Test
     public void prediksiCacatProdukbyDataAktual() {
-        DataDao dtDao = new DataDao();
-
         DecimalFormat format = new DecimalFormat("##.###");
 
         List<Double> dataPrediksi = new ArrayList<>();
 
-        List<Data> dataAktual = dtDao.getAllData();
+        List<Data> dataAktual = getDao().getAllData();
 
         for (int i = 0; i < dataAktual.size(); i++) {
             Double jmlCacat = regEngine.getKoefisienRegA() + regEngine.getKoefisienRegB()
@@ -96,5 +99,6 @@ public class RegresiEngineTest {
         Double mse = NumericEvaluation.calcMSE(dataAktual, dataPrediksi);
         System.out.println("Dengan Nilai RMSE = " + format.format(rmse / 100) + " %");
         System.out.println("Dengan Nilai MSE  = " + format.format(mse / 100) + " %");
+        System.out.println("\n");
     }
 }

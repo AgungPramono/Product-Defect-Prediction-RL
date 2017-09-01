@@ -9,6 +9,9 @@ package com.agung.prediksi.test;
 
 import com.agung.prediksi.dao.DataDao;
 import com.agung.prediksi.entity.Data;
+import com.agung.prediksi.util.CSVReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,20 +20,38 @@ import org.junit.Test;
  *
  * @author agung
  */
-public class DataDaoTest {
+public class DataDaoTest extends BaseTest{
 
-    private final DataDao dd = new DataDao();
+    private DataDao dd;
+    
+    //@Before
+    public void loadDataFromCSV() throws FileNotFoundException{
+        CSVReader read = new CSVReader(new File("src/main/resources/Data.csv"));
+        dd = new DataDao();
+        dd.setData(read.readFile());
+    }
 
     @Test
     public void testGetAll() {
-        List<Data> data = dd.getAllData();
+        List<Data> data = getDao().getAllData();
+        Assert.assertFalse(data.isEmpty());
+        Assert.assertEquals(10, data.size());
+    }
+    
+    @Test
+    public void testGetAllFromCsv() throws FileNotFoundException{
+        List<Data> data = getDao().getAllData();
+        for (Data d : data) {
+            System.out.println(d.getJumlahCacat());
+            
+        }
         Assert.assertFalse(data.isEmpty());
         Assert.assertEquals(10, data.size());
     }
 
     @Test
     public void testFindById() {
-        Data d1 = dd.getDataById(0);
+        Data d1 = getDao().getDataById(0);
         System.out.println(d1.getSuhuRuangan());
     }
 }
