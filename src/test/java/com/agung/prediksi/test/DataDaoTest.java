@@ -35,7 +35,7 @@ public class DataDaoTest extends BaseTest{
     public void testGetAll() {
         List<Data> data = getDao().getAllData();
         Assert.assertFalse(data.isEmpty());
-        Assert.assertEquals(10, data.size());
+        Assert.assertEquals(20, data.size());
     }
     
     @Test
@@ -46,7 +46,7 @@ public class DataDaoTest extends BaseTest{
             
         }
         Assert.assertFalse(data.isEmpty());
-        Assert.assertEquals(10, data.size());
+        Assert.assertEquals(20, data.size());
     }
 
     @Test
