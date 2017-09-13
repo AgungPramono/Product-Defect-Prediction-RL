@@ -12,6 +12,8 @@ import com.agung.prediksi.util.CSVReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -19,10 +21,12 @@ import org.junit.BeforeClass;
  */
 public class BaseTest {
 
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(BaseTest.class);
     private static DataDao dao;
 
     @BeforeClass
     public static void initData() throws FileNotFoundException {
+        LOGGER.debug("inisialisasi data");
         dao = new DataDao();
         CSVReader read = new CSVReader(new File("src/main/resources/data_nilai.csv"));
         dao.setData(read.readFile());
