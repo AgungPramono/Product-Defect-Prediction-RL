@@ -13,72 +13,76 @@ import com.agung.prediksi.entity.Data;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.math3.util.FastMath;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author agung
  */
-public class RegresiEngineTest extends BaseTest{
+public class RegresiEngineTest extends BaseTest {
 
     private RegresiEngine regEngine;
+    private DecimalFormat format = new DecimalFormat("##.##");
+    private static final Logger logger = LoggerFactory.getLogger(RegresiEngineTest.class);
 
     @Before
-    public void initialize(){
+    public void initialize() {
         List<Data> listData = getDao().getAllData();
         regEngine = new RegresiEngine(listData);
     }
-    //@Test
+
+    @Test
     public void testJumlahSuhu() {
         Double jumlahSuhu = regEngine.getTotalSuhu();
         System.out.println("Jumlah Suhu : " + jumlahSuhu);
     }
 
-    //@Test
+    @Test
     public void testJumlahCacat() {
         Double jumlahCacat = regEngine.getTotalCacatProduk();
-        System.out.println("Jumlah Cacat = " + jumlahCacat);
+        logger.info("Jumlah Cacat = {}", jumlahCacat);
     }
 
     @Test
     public void testHitungKoefisienRegA() {
         Double regA = regEngine.getKoefisienRegA();
-        System.out.println("Koefisien Reg A = " + regA);
+        logger.info("Koefisien Reg A = {}", regA);
     }
 
-    //@Test
+    @Test
     public void hitung() {
         Double nilai = ((8 * (17416)) - ((413) * (292))) / ((8 * (25189))
                 - (Math.pow(413, 2)));
 
-        System.out.println("Nilai = " + nilai);
-        System.out.println("Nilai : " + nilai);
+        logger.info("Nilai = {}", nilai);
+        logger.info("Nilai : ", nilai);
     }
 
     @Test
     public void testHitungKoefisienRegB() {
         Double regB = regEngine.getKoefisienRegB();
-        System.out.println("Koefisien Reg B = " + regB);
+        logger.info("Koefisien Reg B = {}", regB);
     }
 
     @Test
     public void testPrediksiJumlahCacatProduk() {
-        Double suhu = 80.0;
+        Double suhu = 90.0;
 
         Double jumlahCacat = regEngine.getKoefisienRegA()
                 + regEngine.getKoefisienRegB() * suhu;
 
         System.out.println("");
-        System.out.println("Jadi dengan suhu = " + suhu + " derajat celcius");
-        System.out.println("Diprediksikan terjadi cacat produk sebanyak = "
-                + Math.round(jumlahCacat) + " item\n");
+        logger.info("Jadi dengan suhu = {} derajat celcius", suhu);
+        logger.info("Diprediksikan terjadi cacat produk sebanyak = {} item\n",
+                 FastMath.round(jumlahCacat));
     }
 
     @Test
     public void prediksiCacatProdukbyDataAktual() {
-        DecimalFormat format = new DecimalFormat("##.###");
-
         List<Double> dataPrediksi = new ArrayList<>();
 
         List<Data> dataAktual = getDao().getAllData();
@@ -88,8 +92,8 @@ public class RegresiEngineTest extends BaseTest{
                     * dataAktual.get(i).getSuhuRuangan();
 
             System.out.println("");
-            System.out.println("Jumlah Cacat aktual = " + dataAktual.get(i).getJumlahCacat());
-            System.out.println("Jumlah Cacat Prediksi = " + format.format(jmlCacat) + "\n");
+            logger.info("Jumlah Cacat aktual = {}", dataAktual.get(i).getJumlahCacat());
+            logger.info("Jumlah Cacat Prediksi = {} \n", format.format(jmlCacat));
 
             dataPrediksi.add(jmlCacat);
         }
@@ -97,8 +101,8 @@ public class RegresiEngineTest extends BaseTest{
         //test tingkat error dengan RMSE dan MSE
         Double rmse = NumericEvaluation.calcRMSE(dataAktual, dataPrediksi);
         Double mse = NumericEvaluation.calcMSE(dataAktual, dataPrediksi);
-        System.out.println("Dengan Nilai RMSE = " + format.format(rmse / 100) + " %");
-        System.out.println("Dengan Nilai MSE  = " + format.format(mse / 100) + " %");
+        logger.info("Dengan Nilai RMSE = {} %", format.format(rmse / 100));
+        logger.info("Dengan Nilai MSE  = {} %", format.format(mse / 100));
         System.out.println("\n");
     }
 }

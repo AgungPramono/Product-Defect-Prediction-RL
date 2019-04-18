@@ -11,6 +11,7 @@ import com.agung.prediksi.dao.DataDao;
 import com.agung.prediksi.entity.Data;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  *
@@ -100,14 +101,14 @@ public class RegresiEngine {
     public Double getKoefisienRegA() {
         Double a = (double) (((getTotalCacatProduk()) * (getTotalX()))
                 - ((getTotalSuhu()) * (getTotalXY())))
-                / ((listData.size() * (getTotalX())) - (Math.pow(getTotalSuhu(), 2)));
+                / ((listData.size() * (getTotalX())) - (FastMath.pow(getTotalSuhu(), 2)));
         return a;
     }
 
     public Double getKoefisienRegB() {
         Double b = (double) ((listData.size() * (getTotalXY()))
                 - ((getTotalSuhu()) * (getTotalCacatProduk())))
-                / ((listData.size() * (getTotalX())) - (Math.pow(getTotalSuhu(), 2)));
+                / ((listData.size() * (getTotalX())) - (FastMath.pow(getTotalSuhu(), 2)));
         return b;
     }
 }

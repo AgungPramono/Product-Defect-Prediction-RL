@@ -21,14 +21,14 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseTest {
 
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(BaseTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseTest.class);
     private static DataDao dao;
 
     @BeforeClass
     public static void initData() throws FileNotFoundException {
         LOGGER.debug("inisialisasi data");
         dao = new DataDao();
-        CSVReader read = new CSVReader(new File("src/main/resources/data_nilai.csv"));
+        CSVReader read = new CSVReader(new File("src/main/resources/Data.csv"));
         dao.setData(read.readFile());
     }
 
